@@ -21,10 +21,10 @@ RUN docker-php-ext-configure gd \
         --with-xpm-dir \
         --with-freetype-dir \
         --enable-gd-native-ttf; \
+    docker-php-ext-install gd; \
     docker-php-ext-install bcmath; \
     docker-php-ext-install opcache; \
     docker-php-ext-install pdo_mysql; \
-    docker-php-ext-install gd; \
     docker-php-ext-install zip;
 
 RUN pecl install xdebug-2.7.2;
