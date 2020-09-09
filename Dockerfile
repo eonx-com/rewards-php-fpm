@@ -19,8 +19,7 @@ RUN docker-php-ext-configure gd \
         --with-png-dir \
         --with-zlib-dir \
         --with-xpm-dir \
-        --with-freetype-dir \
-        --enable-gd-native-ttf; \
+        --with-freetype-dir; \
     docker-php-ext-install gd; \
     docker-php-ext-install bcmath; \
     docker-php-ext-install opcache; \
