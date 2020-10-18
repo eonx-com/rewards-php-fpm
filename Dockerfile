@@ -26,6 +26,6 @@ RUN docker-php-ext-configure gd \
     docker-php-ext-install pdo_mysql; \
     docker-php-ext-install zip;
 
-RUN pecl install xdebug-2.7.2;
+RUN pecl install xdebug-2.9.8;
 
 WORKDIR "/var/www/"
