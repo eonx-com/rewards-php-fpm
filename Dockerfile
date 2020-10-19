@@ -1,31 +1,13 @@
-FROM php:7.4-fpm
+FROM php:7.4-fpm-alpine AS build
 
-RUN apt-get update; \
-    apt-get install --no-install-recommends -y \
-        libzip-dev \
-        libjpeg-dev \
-        libpng-dev \
-        libfreetype6-dev \
-        libwebp-dev \
-        libjpeg62-turbo-dev \
-        libxpm-dev \
-        zlib1g-dev; \
-    rm -rf /var/lib/apt/lists/*;
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 
-RUN docker-php-ext-configure gd \
-        --with-gd \
-        --with-webp-dir \
-        --with-jpeg-dir \
-        --with-png-dir \
-        --with-zlib-dir \
-        --with-xpm-dir \
-        --with-freetype-dir; \
-    docker-php-ext-install gd; \
-    docker-php-ext-install bcmath; \
-    docker-php-ext-install opcache; \
-    docker-php-ext-install pdo_mysql; \
-    docker-php-ext-install zip;
-
-RUN pecl install xdebug-2.9.8;
+RUN install-php-extensions \
+  bcmath \
+  gd \
+  opcache \
+  pdo_mysql \
+  xdebug \
+  zip;
 
 WORKDIR "/var/www/"
