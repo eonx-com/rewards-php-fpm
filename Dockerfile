@@ -1,4 +1,4 @@
-FROM php:7.4-fpm AS build
+FROM php:8.1-fpm AS build
 
 RUN apt-get update; \
     apt-get install --no-install-recommends -y \
@@ -47,7 +47,8 @@ RUN apt-get update; \
       'zlib1g-dev'; \
     rm -rf /var/lib/apt/lists/*;
 
-RUN pecl install xdebug-2.9.8;
+# Don't install xdebug in base image
+# RUN pecl install xdebug-2.9.8;
 
 WORKDIR "/var/www/"
 

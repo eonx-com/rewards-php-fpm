@@ -1,4 +1,4 @@
 # rewards-php-fpm
 Rewards PHP-FPM Container
 
-PHP 7.4
+PHP 8.1
