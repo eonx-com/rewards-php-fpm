@@ -47,9 +47,4 @@ RUN apt-get update; \
       'zlib1g-dev'; \
     rm -rf /var/lib/apt/lists/*;
 
-# Don't install xdebug in base image
-# RUN pecl install xdebug-2.9.8;
-
 WORKDIR "/var/www/"
-
-
