@@ -27,8 +27,8 @@ jobs:
                 uses: actions/cache@v3
                 with:
                     path: /tmp/.buildx-cache
-                    key: rewards-php-fpm-${{ hashFiles('docker/containers/api/Dockerfile') }}-${{ github.sha }}
-                    restore-keys: rewards-php-fpm-${{ hashFiles('docker/containers/api/Dockerfile') }}-
+                    key: rewards-php-fpm-${{ matrix.php }}-${{ hashFiles('docker/containers/api/Dockerfile') }}-${{ github.sha }}
+                    restore-keys: rewards-php-fpm-${{ matrix.php }}-${{ hashFiles('docker/containers/api/Dockerfile') }}-
 
             -   name: Get current time
                 id: currentTime
