@@ -1,0 +1,56 @@
+name: publish
+
+on:
+    push:
+        branches:
+            - release
+
+jobs:
+    publish:
+        runs-on: ubuntu-latest
+        timeout-minutes: 60
+        strategy:
+            fail-fast: false
+            matrix:
+                php: [ '8.1', '8.2' ]
+        steps:
+            -   uses: actions/checkout@v3
+            -   uses: docker/login-action@v2
+                with:
+                    registry: ghcr.io
+                    username: ${{ github.actor }}
+                    password: ${{ secrets.GITHUB_TOKEN }}
+
+            -   uses: docker/setup-buildx-action@v2
+
+            -   name: Cache Docker Layers
+                uses: actions/cache@v3
+                with:
+                    path: /tmp/.buildx-cache
+                    key: rewards-php-fpm-${{ hashFiles('docker/containers/api/Dockerfile') }}-${{ github.sha }}
+                    restore-keys: rewards-php-fpm-${{ hashFiles('docker/containers/api/Dockerfile') }}-
+
+            -   name: Get current time
+                id: currentTime
+                run: echo "time=$(date +%Y%m%d%H%M)" >> $GITHUB_OUTPUT
+
+            -   name: Build images
+                uses: docker/build-push-action@v4
+                with:
+                    context: .
+                    file: ./Dockerfile
+                    push: true
+                    tags: |
+                        ghcr.io/eonx-com/rewards-php-fpm:latest
+                        ghcr.io/eonx-com/rewards-php-fpm:php${{ matrix.php }}-latest
+                        ghcr.io/eonx-com/rewards-php-fpm:php${{ matrix.php }}-${{ steps.currentTime.outputs.time }}
+                    cache-from: type=local,src=/tmp/.buildx-cache
+                    cache-to: type=local,dest=/tmp/.buildx-cache-new
+                    platforms: linux/amd64,linux/arm64
+                    build-args: |
+                        PHP_VERSION=${{ matrix.php }}
+
+            -   name: Move Docker Layers Cache
+                run: |
+                    rm -rf /tmp/.buildx-cache
+                    mv /tmp/.buildx-cache-new /tmp/.buildx-cache
